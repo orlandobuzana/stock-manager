@@ -1,33 +1,73 @@
 # Dental Stock Manager
 
-This is a MERN stack web application for managing dental product stocks.
+A stock management app for dental practices. It tracks dental product inventory — each product has a name, quantity in stock, and price — displayed in a simple web UI backed by a MongoDB database.
 
-## Project Structure
+## What it does
 
-- **/server**: Contains Node.js/Express server, Mongoose models.
-- **/client**: Contains React app using a Vite-style structure, Bootstrap for styling.
+- **Product inventory list** — the React frontend (`client/src/App.jsx`) fetches the product list from `/api/products` and renders each item's name, quantity in stock, and price in a Bootstrap list.
+- **MongoDB persistence** — the Express backend (`server/app.js`) connects to MongoDB and loads a Mongoose `Product` model (`server/models/Product.js`). A `GET /` route returns a welcome message.
+- **Product model** — `name` (String, required), `quantity` (Number, required), `price` (Number, required).
 
-## Setup
+> Note: the app is an early-stage scaffold — the frontend calls `/api/products`, but that route is not yet implemented in the backend (the code has an `// API routes here` placeholder), so the list will be empty until the route is added.
 
-1. Clone the repository.
-2. Navigate to both `/server` and `/client` folders and run `npm install` in each.
-3. Create a `.env` file in the `/server` folder with your configuration (e.g., Mongo URI).
+## Tech stack
 
-## Running the App
+| Layer | Technology |
+| --- | --- |
+| Frontend | React, Vite, Bootstrap |
+| Backend | Node.js, Express |
+| Database | MongoDB (via Mongoose) |
+| Config | dotenv (environment variables) |
+| Dev tooling | concurrently, nodemon |
 
-Use the following command to start the application:
+## Project structure
 
-```bash
-npm run dev
+```
+stock-manager/
+├── client/               # React frontend (Vite-style structure)
+│   ├── index.html
+│   └── src/
+│       ├── App.jsx       # Product list UI (fetches /api/products)
+│       └── main.jsx
+├── server/               # Express backend
+│   ├── app.js            # Server entry point (MongoDB connection, routes)
+│   └── models/
+│       └── Product.js    # Mongoose Product schema (name, quantity, price)
+└── package.json          # Scripts + dependencies for both apps
 ```
 
-This will concurrently start both the client and the server.
+## How to run it locally
 
-## Technologies Used
+### Prerequisites
 
-- **React** for the client-side framework.
-- **Express** for the server framework.
-- **Mongoose** for MongoDB object modeling.
-- **Bootstrap** for styling.
-- **Concurrently** for running server and client in parallel.
-- **Vite** for the build tool.
+- Node.js and npm
+- A MongoDB instance you can connect to (local or hosted)
+
+### Steps
+
+1. Clone the repository and enter it:
+
+   ```bash
+   git clone https://github.com/orlandobuzana/stock-manager.git
+   cd stock-manager
+   ```
+
+2. Install dependencies (both apps' dependencies are declared in the root `package.json`):
+
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file at the repo root with your MongoDB connection string. The server reads `process.env.MONGO_URI` (via `dotenv`); the API port defaults to `5000` and can be overridden with `PORT`:
+
+   ```
+   MONGO_URI=mongodb://localhost:27017/dental-stock
+   ```
+
+4. Start the backend and frontend together:
+
+   ```bash
+   npm run dev
+   ```
+
+   This uses `concurrently` to run the Express server (`nodemon server/app.js`) and the Vite dev server (`vite client`) in parallel. Open the Vite dev server URL in your browser to see the "Dental Stock Manager" product list.
